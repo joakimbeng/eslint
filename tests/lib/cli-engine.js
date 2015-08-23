@@ -120,7 +120,7 @@ describe("CLIEngine", function() {
             assert.equal(report.results.length, 1);
             assert.equal(report.errorCount, 0);
             assert.equal(report.warningCount, 1);
-            assert.equal(report.results[0].filePath, "tests/fixtures/passing.js");
+            assert.equal(report.results[0].filePath, path.resolve("tests/fixtures/passing.js"));
             assert.equal(report.results[0].messages[0].severity, 1);
             assert.equal(report.results[0].messages[0].message, "File ignored because of your .eslintignore file. Use --no-ignore to override.");
             assert.equal(report.results[0].errorCount, 0);
@@ -157,9 +157,22 @@ describe("CLIEngine", function() {
                 configFile: path.join(__dirname, "..", "..", ".eslintrc")
             });
 
-            var report = engine.executeOnFiles(["lib/cli.js"]);
-            assert.equal(report.results.length, 1);
+            var report = engine.executeOnFiles(["lib/cli*.js"]);
+            assert.equal(report.results.length, 2);
             assert.equal(report.results[0].messages.length, 0);
+            assert.equal(report.results[1].messages.length, 0);
+        });
+
+        it("should handle multiple patterns with overlapping files", function() {
+
+            engine = new CLIEngine({
+                configFile: path.join(__dirname, "..", "..", ".eslintrc")
+            });
+
+            var report = engine.executeOnFiles(["lib/cli*.js", "lib/cli.?s", "lib/{cli,cli-engine}.js"]);
+            assert.equal(report.results.length, 2);
+            assert.equal(report.results[0].messages.length, 0);
+            assert.equal(report.results[1].messages.length, 0);
         });
 
         it("should report zero messages when given a directory with a .js2 file", function() {
@@ -180,6 +193,18 @@ describe("CLIEngine", function() {
             });
 
             var report = engine.executeOnFiles(["tests/fixtures/files/"]);
+            assert.equal(report.results.length, 2);
+            assert.equal(report.results[0].messages.length, 0);
+            assert.equal(report.results[1].messages.length, 0);
+        });
+
+        it("should report zero messages when given a pattern with a .js and a .js2 file", function() {
+
+            engine = new CLIEngine({
+                extensions: [".js", ".js2"]
+            });
+
+            var report = engine.executeOnFiles(["tests/fixtures/files/*.?s*"]);
             assert.equal(report.results.length, 2);
             assert.equal(report.results[0].messages.length, 0);
             assert.equal(report.results[1].messages.length, 0);
