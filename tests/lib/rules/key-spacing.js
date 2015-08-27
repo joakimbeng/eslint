@@ -150,6 +150,17 @@ ruleTester.run("key-spacing", rule, {
             afterColon: true
         }]
     }, {
+        code: [
+            "obj = { key ",
+            "    :     ",
+            " longName };"
+        ].join("\n"),
+        options: [{
+            beforeColon: true,
+            afterColon: false,
+            mode: "minimum"
+        }]
+    }, {
         code: "var obj = { get fn() { return 42; } };",
         options: [{}]
     }, {
@@ -415,6 +426,31 @@ ruleTester.run("key-spacing", rule, {
         errors: [
             { message: "Missing space after key \"b\".", line: 3, column: 11, type: "Identifier" }
         ]
+    }, {
+        code: [
+            "obj = { key ",
+            " :     longName };"
+        ].join("\n"),
+        options: [{
+            beforeColon: true,
+            afterColon: 4
+        }],
+        errors: [
+            { message: "Extra space before value for key \"key\".", line: 2, column: 8, type: "Identifier" }
+        ]
+    }, {
+        code: [
+            "obj = {",
+            "    key : longName",
+            "};"
+        ].join("\n"),
+        options: [{
+            mode: "minimum",
+            beforeColon: false,
+            afterColon: 2
+        }],
+        errors: [
+            { message: "Missing space before value for key \"key\".", line: 2, column: 11, type: "Identifier" }
+        ]
     }]
-
 });
