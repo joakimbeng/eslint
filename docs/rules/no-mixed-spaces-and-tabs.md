@@ -34,7 +34,7 @@ function main() {
 // --->....y = 7;
 
     var x = 5,
-	    y = 7;         /*error Mixed spaces and tabs.*/
+        y = 7;         /*error Mixed spaces and tabs.*/
 }
 ```
 
@@ -45,7 +45,7 @@ The following patterns are not warnings:
 
 function add(x, y) {
 // --->return x + y;
-	return x + y;
+    return x + y;
 }
 ```
 
@@ -58,8 +58,8 @@ function main() {
 // --->var x = 5,
 // --->....y = 7;
 
-	var x = 5,
-	    y = 7;
+    var x = 5,
+        y = 7;
 }
 ```
 
